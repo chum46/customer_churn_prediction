@@ -99,20 +99,6 @@ def crossValidate():
     """
     return
 
-def recall_optim(y_true, y_pred):
-    
-    conf_matrix = confusion_matrix(y_true, y_pred)
-    
-    # Recall will be worth a greater value than specificity
-    rec = recall_score(y_true, y_pred) * 0.8 
-    spe = conf_matrix[0,0]/conf_matrix[0,:].sum() * 0.2 
-    
-    # Imperfect recalls will lose a penalty. This means the best results 
-    # will have perfect recalls and compete for specificity
-    if rec < 0.8:
-        rec -= 0.2
-    return rec + spe 
-
 def hp_tuning(clf, params, X_train, X_test, y_train, y_test):
     performance = pd.DataFrame(columns=['Train_Recall','Test_Recall','Test_Specificity'])
     
@@ -130,7 +116,7 @@ def hp_tuning(clf, params, X_train, X_test, y_train, y_test):
     # Heading
     print('\n','-'*40,'\n',clf.__class__.__name__,'\n','-'*40)
 
-    # Extract best estimator
+    # Get best estimator
     best = search.best_estimator_
     print('Best parameters: \n\n',search.best_params_,'\n')
 
@@ -141,15 +127,14 @@ def hp_tuning(clf, params, X_train, X_test, y_train, y_test):
     print("\nCross-validation recall scores:",train_cv)
     print("Mean recall score:",train_cv.mean())
 
-    # Now predict on the test group
+    # Predict on the test group
     print("\nTEST GROUP")
     y_pred = best.fit(X_train, y_train).predict(X_test)
     print("\nRecall:",recall_score(y_test,y_pred))
 
-    # Get classification report
+    # Print classification report and confusion matrix
     print(classification_report(y_test, y_pred))
 
-    # Print confusion matrix
     fig = plt.figure(figsize = (10,7))
     conf_matrix = confusion_matrix(y_test,y_pred)
     sns.heatmap(conf_matrix, annot=True, fmt='d')
@@ -162,8 +147,6 @@ def hp_tuning(clf, params, X_train, X_test, y_train, y_test):
         conf_matrix[0,0]/conf_matrix[0,:].sum()
     ]
     
-    # Look at the parameters for the top best scores
-    display(pd.DataFrame(search.cv_results_).iloc[:,4:].sort_values(by='rank_test_score').head())
     display(performance)
     return performance, search.cv_results_
         

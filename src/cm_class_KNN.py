@@ -89,17 +89,6 @@ class knnModel():
         """
         ss = StandardScaler()
         
-        #X_ind = X_t.index
-        #X_col = X_t.columns
-
-        #X_t_s = pd.DataFrame(ss.fit_transform(X_t))
-        #X_t_s.index = X_ind
-        #X_t_s.columns = X_col
-
-        #X_v_ind = X_val.index
-        #X_val_s = pd.DataFrame(ss.transform(X_val))
-        #X_val_s.index = X_v_ind
-        #X_val_s.columns = X_col
 
         X_train_scaled = ss.fit_transform(self.X_train)
         X_test_scaled = ss.transform(self.X_test)

@@ -16,3 +16,13 @@ def run_model(classifier, X, y):
     # Confusion matrix:
     print(f"Train: {confusion_matrix(y_train, model.predict(X_train))}")
     print(f"Test: {confusion_matrix(y_test, model.predict(X_test))}")
+    
+
+def plot_feature_importances(model):
+    n_features = X_train.shape[1]
+    plt.figure(figsize=(15,15))
+    plt.barh(range(n_features), model.feature_importances_) 
+    plt.yticks(np.arange(n_features), X_train.columns.values, fontsize = 12) 
+    plt.xlabel('Feature importance')
+    plt.ylabel('Feature')
+    plt.title('Model Feature Importance', fontsize = 20)

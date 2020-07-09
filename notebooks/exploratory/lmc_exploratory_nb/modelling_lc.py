@@ -26,3 +26,34 @@ def plot_feature_importances(model):
     plt.xlabel('Feature importance')
     plt.ylabel('Feature')
     plt.title('Model Feature Importance', fontsize = 20)
+    
+def scale_balance_model(X_train, y_train, model, scaler = StandardScaler()):
+    # create kfolds object
+    kf = KFold(n_splits = 5, random_state = 15)
+    
+    # create list to add recall scores
+    validation_recall = []
+    
+    for train_ind, val_ind in kf.split(X_train, y_train):
+        X_t, y_t = X_train.iloc[train_ind], y_train.iloc[train_ind]
+        X_val, y_val = X_train.iloc[val_ind], y_train.iloc[val_ind]
+        
+        # instantiate and fit/transform scaler
+        scaler = scaler
+        X_t_sc = scaler.fit_transform(X_t)
+        X_val_sc = scaler.transform(X_val)
+        
+        # instantiate and fit SMOTE:
+        smote = SMOTE(random_state = 15)
+        X_t_resampled, y_t_resampled = smote.fit_resample(X_t_sc, y_t)
+        
+        # fit model to X_t_resampled:
+        model.fit(X_t_resampled, y_t_resampled)
+        
+        # append recall score to validation recall list:
+        validation_recall.append(recall_score(y_val, model.predict(X_val_sc)))
+        
+    print(f"Validation recall scores: {validation_recall}")
+    print(f"Mean recall score:  {np.mean(validation_recall)}")
+    
+    plot_feature_importances(model)

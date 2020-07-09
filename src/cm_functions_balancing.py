@@ -58,16 +58,6 @@ def df_corr (df, th):
     and prints the results summary.
     """
     import seaborn as sns
-    le = LabelEncoder()
-    df['international_plan_binary'] = le.fit_transform(df['international_plan'])
-    df['voice_mail_plan_binary'] = le.fit_transform(df['voice_mail_plan'])
-    df['target'] = le.fit_transform(df['churn'])
-    df.pop('international_plan')
-    df.pop('voice_mail_plan')
-    df.pop('churn')
-    col_name='churn'
-    first_col = df.pop('target')
-    df.insert(0, col_name, first_col)
     sns.set(rc={'figure.figsize':(15, 15)})
     mask = np.triu(np.ones_like(df.corr(), dtype=np.bool))
     sns.heatmap(df.corr(), mask=mask);

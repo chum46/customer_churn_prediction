@@ -62,7 +62,7 @@ def LRM_regularization_tune(X_train_sc, y_train):
         fpr, tpr, thresholds = roc_curve(y_train, y_train_score)
 
         print('AUC for {}: {}'.format(names[n], auc(fpr, tpr)))
-        print('-------------------------------------------------------')
+        print('-'*40)
         lw = 2
         plt.plot(fpr, tpr, color=colors[n],
                  lw=lw, label='ROC curve Normalization Weight: {}'.format(names[n]))
@@ -93,8 +93,7 @@ def crossValidate():
 
     Methods
     -------
-    info(additional=""):
-        Prints the person's name and age.
+
         
     """
     return

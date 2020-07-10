@@ -1,3 +1,20 @@
+# imports 
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_style('darkgrid')
+
+
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, KFold
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, classification_report, roc_curve, auc
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
+from imblearn.over_sampling import SMOTE
+
 def run_model(classifier, X, y):
     model = classifier
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 15)
@@ -19,8 +36,8 @@ def run_model(classifier, X, y):
     
 
 def plot_feature_importances(model):
-    n_features = X_train.shape[1]
-    plt.figure(figsize=(15,15))
+    n_features = model.n_features_
+    plt.figure(figsize=(10, 10))
     plt.barh(range(n_features), model.feature_importances_) 
     plt.yticks(np.arange(n_features), X_train.columns.values, fontsize = 12) 
     plt.xlabel('Feature importance')
@@ -56,4 +73,9 @@ def scale_balance_model(X_train, y_train, model, scaler = StandardScaler()):
     print(f"Validation recall scores: {validation_recall}")
     print(f"Mean recall score:  {np.mean(validation_recall)}")
     
-    plot_feature_importances(model)
+    # plot feature importance
+#     feature_importance = model.feature_importances_
+#     feat_importances = pd.Series(model.feature_importances_, index = X_t_resampled.columns)
+#     feat_importances = feat_importances.nlargest(19)
+#     feat_importances.plot(kind='barh' , figsize=(10,10))
+    

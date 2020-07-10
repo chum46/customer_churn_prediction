@@ -9,11 +9,21 @@ sns.set_style('darkgrid')
 
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, KFold
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, classification_report, roc_curve, auc
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, classification_report, roc_curve, auc, make_scorer
 from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
 from imblearn.over_sampling import SMOTE
+
+from src import cm_functions_preprocessing as cmpre
+
+# Classifier Libraries
+from sklearn.linear_model import LogisticRegression, RidgeCV, LassoCV
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from imblearn.ensemble import BalancedRandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor, GradientBoostingClassifier
 
 def run_model(classifier, X, y):
     model = classifier
@@ -78,4 +88,47 @@ def scale_balance_model(X_train, y_train, model, scaler = StandardScaler()):
 #     feat_importances = pd.Series(model.feature_importances_, index = X_t_resampled.columns)
 #     feat_importances = feat_importances.nlargest(19)
 #     feat_importances.plot(kind='barh' , figsize=(10,10))
+
+def compare_models(X_train, y_train):
+    # create kfolds object
+    kf = KFold(n_splits = 5, shuffle=True, random_state = 42)
     
+    for train_ind, val_ind in kf.split(X_train, y_train):
+
+        performance = pd.DataFrame(columns=['Train_Recall','Test_Recall','Test_Specificity'])
+        mu_performance = pd.DataFrame(columns=['Train_Recall','Test_Recall','Test_Specificity'])
+
+        recall = make_scorer(recall_score)
+
+        X_t, y_t = X_train.iloc[train_ind], y_train.iloc[train_ind]
+        X_val, y_val = X_train.iloc[val_ind], y_train.iloc[val_ind]
+
+        # instantiate and fit/transform scaler
+        X_t_sc, X_val_sc = cmpre.ss_scale(X_t, X_val)
+
+        # instantiate and fit SMOTE:
+        smote = SMOTE(random_state = 42)
+        X_t_sc_bal, y_t_bal = smote.fit_resample(X_t_sc, y_t)
+
+        classifiers = [DecisionTreeClassifier(), KNeighborsClassifier(),
+                   RandomForestClassifier(n_estimators = 10), AdaBoostClassifier(),
+                   GradientBoostingClassifier()]
+
+        for clf in classifiers:
+            train_cv = cross_val_score(X=X_t_sc_bal, y=y_t_bal, 
+                                       estimator=clf, scoring=recall,cv=10)
+
+            # Predict
+            y_pred = clf.fit(X_t_sc_bal, y_t_bal).predict(X_val_sc)
+
+            conf_matrix = confusion_matrix(y_val,y_pred)
+
+            # Store results
+            performance.loc[clf.__class__.__name__+'_default',
+                            ['Train_Recall','Test_Recall','Test_Specificity']] = [
+                train_cv.mean(),
+                recall_score(y_val,y_pred),
+                conf_matrix[0,0]/conf_matrix[0,:].sum()
+            ]
+        mu_performance = pd.concat([mu_performance,performance])
+        print(mu_performance, '\n')

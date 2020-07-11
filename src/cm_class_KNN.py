@@ -89,17 +89,6 @@ class knnModel():
         """
         ss = StandardScaler()
         
-        #X_ind = X_t.index
-        #X_col = X_t.columns
-
-        #X_t_s = pd.DataFrame(ss.fit_transform(X_t))
-        #X_t_s.index = X_ind
-        #X_t_s.columns = X_col
-
-        #X_v_ind = X_val.index
-        #X_val_s = pd.DataFrame(ss.transform(X_val))
-        #X_val_s.index = X_v_ind
-        #X_val_s.columns = X_col
 
         X_train_scaled = ss.fit_transform(self.X_train)
         X_test_scaled = ss.transform(self.X_test)
@@ -112,7 +101,7 @@ class knnModel():
         X_train, y_train = self.KNN_tts()
         
         # KFold
-        kf = KFold(n_splits=5, random_state=self.random_state, shuffle=True)
+        kf = KFold(n_splits=10, random_state=self.random_state, shuffle=True)
 
         K = [] 
         training = [] 
@@ -123,8 +112,8 @@ class knnModel():
         for k in range(2,21):
             
             knn = KNeighborsClassifier(n_neighbors=k)
-            accuracy_score_t = []
-            accuracy_score_v = []
+            recall_score_t = []
+            recall_score_v = []
             
             for train_ind, val_ind in kf.split(X_train, y_train):
 
@@ -145,19 +134,19 @@ class knnModel():
                 y_pred_t = knn.predict(X_t_s)
                 y_pred_v = knn.predict(X_v_s)
 
-                accuracy_score_t.append(accuracy_score(y_t, y_pred_t))
-                accuracy_score_v.append(accuracy_score(y_v, y_pred_v))
+                recall_score_t.append(recall_score(y_t, y_pred_t))
+                recall_score_v.append(recall_score(y_v, y_pred_v))
 
             K.append(k)
-            training.append(np.mean(accuracy_score_t)) 
-            test.append(np.mean(accuracy_score_v)) 
-            k_scores_train[k] = np.mean(accuracy_score_t)
-            k_scores_val[k] = np.mean(accuracy_score_v)
+            training.append(np.mean(recall_score_t)) 
+            test.append(np.mean(recall_score_v)) 
+            k_scores_train[k] = np.mean(recall_score_t)
+            k_scores_val[k] = np.mean(recall_score_v)
         
         # Plot the results
         ax = sns.stripplot(K, training, color=".3")
         ax = sns.stripplot(K, test, color="red")
-        ax.set(xlabel ='k values', ylabel ='Accuracy') 
+        ax.set(xlabel ='k values', ylabel ='Recall') 
         plt.show()
         
         return k_scores_train, k_scores_val
@@ -165,11 +154,17 @@ class knnModel():
     def KNN_predict (self, **kwargs):
         self.k = kwargs.get('k', None)
         
-        clf = KNeighborsClassifier(n_neighbors = self.k) 
-        clf.fit(self.X_train, self.y_train) 
+        knn = KNeighborsClassifier(n_neighbors = self.k)
+        mm = MinMaxScaler()
+        X_t_s = pd.DataFrame(mm.fit_transform(self.X_train))
+        X_v_s = pd.DataFrame(mm.transform(self.X_test))
+        knn.fit(self.X_train, self.y_train) 
         
-        print(f"training accuracy: {clf.score(self.X_t_s, self.y_t)}")
-        print(f"Val accuracy: {clf.score(self.X_val_s, self.y_val)}")
+        y_pred_t = knn.predict(self.X_train)
+        y_pred_v = knn.predict(X_v_s)
+        
+        print(f"training recall: {clf.score(self.X_t_s, self.y_t)}")
+        print(f"Val recall: {clf.score(self.X_val_s, self.y_val)}")
 
         y_hat = knn.predict(self.X_val_s)
         
@@ -198,7 +193,7 @@ class knnModel():
         hyperparameters = dict(leaf_size=leaf_size, n_neighbors=n_neighbors, p=p)
 
         #Making model
-        clf = GridSearchCV(knn, hyperparameters, cv=5)
+        clf = GridSearchCV(knn, hyperparameters, cv=5, scoring = 'recall')
         best_model = clf.fit(X_t_s, y_t)
         
         #Best Hyperparameters Value
@@ -209,8 +204,8 @@ class knnModel():
         #Predict testing set
         y_pred = best_model.predict(X_val_s)
         
-        #Check performance using accuracy
-        print('Accuracy: ', accuracy_score(y_val, y_pred))
+        #Check performance using recall
+        print('Recall: ', recall_score(y_val, y_pred))
         
         #Check performance using ROC
         print('ROC AUC Score: ', roc_auc_score(y_val, y_pred))
@@ -218,7 +213,9 @@ class knnModel():
         self.get_params = best_model.best_estimator_.get_params()
         
         return self.get_params
-        
+    
+    def KNN_final_test (self):
+        return
         
         
         

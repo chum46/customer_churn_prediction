@@ -1,0 +1,16 @@
+Project imports for environment:
+
+# imports
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_style('darkgrid')
+%matplotlib inline
+
+import geopandas as gp
+
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, classification_report
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier

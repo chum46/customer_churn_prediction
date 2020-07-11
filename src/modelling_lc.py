@@ -12,7 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, classification_report, roc_curve, auc, make_scorer
 from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import SMOTE, ADASYN
 
 from src import cm_functions_preprocessing as cmpre
 
@@ -54,7 +54,7 @@ def plot_feature_importances(model):
     plt.ylabel('Feature')
     plt.title('Model Feature Importance', fontsize = 20)
     
-def scale_balance_model(X_train, y_train, model, scaler = StandardScaler()):
+def scale_balance_model(X_train, y_train, model, scaler = StandardScaler(), balance = SMOTE(random_state = 42)):
     # create kfolds object
     kf = KFold(n_splits = 5, random_state = 15)
     
@@ -70,9 +70,9 @@ def scale_balance_model(X_train, y_train, model, scaler = StandardScaler()):
         X_t_sc = scaler.fit_transform(X_t)
         X_val_sc = scaler.transform(X_val)
         
-        # instantiate and fit SMOTE:
-        smote = SMOTE(random_state = 15)
-        X_t_resampled, y_t_resampled = smote.fit_resample(X_t_sc, y_t)
+        # instantiate and fit balancing object:
+        balance = balance
+        X_t_resampled, y_t_resampled = balance.fit_resample(X_t_sc, y_t)
         
         # fit model to X_t_resampled:
         model.fit(X_t_resampled, y_t_resampled)
@@ -81,7 +81,8 @@ def scale_balance_model(X_train, y_train, model, scaler = StandardScaler()):
         validation_recall.append(recall_score(y_val, model.predict(X_val_sc)))
         
     print(f"Validation recall scores: {validation_recall}")
-    print(f"Mean recall score:  {np.mean(validation_recall)}")
+    print(f"Mean validation recall score:  {np.mean(validation_recall)}")
+    print(confusion_matrix(y_val, model.predict(X_val_sc)))
     
     # plot feature importance
 #     feature_importance = model.feature_importances_

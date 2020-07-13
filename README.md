@@ -4,14 +4,13 @@
 
 <!--ts-->
  * [Files and Folders of Note]()
- * [General Setup Instructions]()
- * [Context of Project]()
- * [Definitions]()
- * [Data]()
- * [Process]()
- * [Results]()
- * [Real World Application]()
- * [Next Steps]()
+ * [General Setup Instructions](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds#general-setup-instructions)
+ * [Context of Project](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds#context)
+ * [Definitions](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds#definitions)
+ * [Data](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds#data)
+ * [Process](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds#models-used--methodology)
+ * [Results](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds#results-future-investigations-and-recommendations)
+ * [Next Steps](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds#future-investigations-and-recommendations)
 <!--te-->
 
 # Files and Folders of Note
@@ -76,11 +75,10 @@
     └── modelling_lc.py
 ```
 #### Repo Navigation Links
- - [presentation.pdf](https://github.com/chum46/mod2_housing_sales/blob/master/reports/Mod2_Presentation.pdf)
- - [final summary notebook](https://github.com/chum46/mod2_housing_sales/blob/master/notebooks/report/00_final_report_and_summary.ipynb)
- - [exploratory notebooks folder](https://github.com/chum46/mod2_housing_sales/tree/master/notebooks/exploratory)
- - [src folder](https://github.com/chum46/mod2_housing_sales/tree/master/src)
- - [references](https://github.com/chum46/mod2_housing_sales/tree/master/references)
+ - [presentation.pdf](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds/blob/master/reports/Group%203%20Customer%20Churn%20Presentation%20Deck.pdf)
+ - [final summary notebook](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds/blob/master/notebooks/report/final_notebook.ipynb)
+ - [exploratory notebooks folder](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds/tree/master/notebooks/exploratory)
+ - [src folder](https://github.com/chum46/mod-3-project-group-3-chi-sea-ds/tree/master/src)
  
 # General Setup Instructions 
 

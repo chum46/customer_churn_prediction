@@ -104,14 +104,14 @@ This project aims to provide SyriaTel with a model to help predict whether a cus
 
 This project aims to:
 
-    - Investigate labeled data on 3333 customers who have held accounts with the company for less than 243 days.
+    - Investigate labelled data on 3333 customers who have held accounts with the company for less than 243 days.
     - Provide inferential statistics and visualisations based on this data.
     - Create predictive, supervised learning models from the data to predict churn
     
 # Definitions:
 
     - Churn: a customer who closes their account with SyriaTel. A prediction of True relates to a customer who will churn.
-    - Predictive model: A mathemaical processes which takes in data utilizes statistics to predict outcomes. 
+    - Predictive model: A mathematical processes which takes in data utilizes statistics to predict outcomes. 
     
 # Data:
 
@@ -119,21 +119,21 @@ This project utilises data from the Churn in Telecom dataset from Kaggle.
 
 The target variable in this dataset that we aimed to predict was identified as the churn column.
 
-The features of this dataset include locational information (state and area_code) as well as plan details such as call minutes, charges, customer services calls and whether the customer had an international plan and/or voice mail plan. Our model iterations utilised subsets of these features as well as aggregations of these features to determine which features would best predict cusomter churn.
+The features of this dataset include locational information (state and area_code) as well as plan details such as call minutes, charges, customer services call and whether the customer had an international plan and/or voice mail plan. Our model iterations utilised subsets of these features as well as aggregations of these features to determine which features would best predict customer churn.
 
-The raw, csv dataset can be downloaded directly from the kaggle website or can be found in this repo here.
+The raw, csv dataset can be downloaded directly from the Kaggle website or can be found in this repo here.
 
 # Models used + Methodology:
 
 This project tests a variety of classification models including:
 
-    - Decisioin Tree Classifier
+    - Decision Tree Classifier
     - Logistic Regression Classifier
     - KNN Classifier
-    - Random Forest Classifer
-    - Gradient Boost Classifer
+    - Random Forest Classifier
+    - Gradient Boost Classifier
 
-We evaluated our models based on the recall score metric as well as the corresponding confusion matrix. Once the best model was identified, we assessed the model performance on a seperate test set to determine whether the model continued to perform well or if the model was overfitting.
+We evaluated our models based on the recall score metric as well as the corresponding confusion matrix. Once the best model was identified, we assessed the model performance on a separate test set to determine whether the model continued to perform well or if the model was overfitting.
 
 The decision behind choosing to evaluate the model on recall was made by considering the cost and impact of false negative predictions, that is, we determined that it was more costly for the company for the model to predict that a customer would stay with SyriaTel when in fact that would churn/leave. This would lead to a missed opportunity for the company to dedicate retention resources towards that customer and keeping their business. Maximising recall score accounts for this scenario in our model and so it was for this reason that we chose this as our evaluation metric.
 
@@ -141,7 +141,7 @@ The decision behind choosing to evaluate the model on recall was made by conside
 
 #### Best model:
 
-Our best model was a gradient boost model which produced a 0.81 recall score on the test data and only 2.9% of the model's predictions on the test data were labeled as false negatives. This was a significant improvement from our FSM which had a recall score of 0.737 and 4.4% of predictions were false negatives.
+Our best model was a gradient boost model which produced a 0.81 recall score on the test data and only 2.9% of the model's predictions on the test data were labelled as false negatives. This was a significant improvement from our FSM which had a recall score of 0.737 and 4.4% of predictions were false negatives.
 
 The parameters of this model were:
 
@@ -159,7 +159,7 @@ The parameters of this model were:
     - Further investigation should be devoted to looking into the other characteristics of these customers to find out why there was a need to make this many calls to customer service and how the company could better assist these customers.
     - Given that over 42% of international plan holders churn, further investigation into retention efforts for these customers might be a worthwhile effort.
     - Further investigation should be done to see what is going on in these high churn states to see what trends might be causing this.
-    - Investigate ways to incentivise customers with total day charges over $55 to stay with with the company by creating added value and perks. This investigation found that 100% of these customers churn.
+    - Investigate ways to incentivise customers with total day charges over $55 to stay with the company by creating added value and perks. This investigation found that 100% of these customers churn.
 
 
 

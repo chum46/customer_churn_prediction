@@ -1,4 +1,4 @@
-# mod-3-project-group-3-chi-sea-ds
+# Predicting Customer Churn in Telecommunications
 
 # Table of Contents
 
